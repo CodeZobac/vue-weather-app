@@ -35,6 +35,7 @@ export default {
     return{
       api_key: process.env.VUE_APP_API_KEY,
       url_base: 'https://api.openweathermap.org/data/2.5/',
+      echoServiceUrl: process.env.VUE_APP_ECHO_SERVICE_URL,
       query: '',
       weather: {}
 
@@ -44,9 +45,9 @@ export default {
     fetchWeather (e) {
       if (e.key == "Enter") {
         fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
-          .then(res => {
-            return res.json();
-          }).then(this.setResults);
+          .then(res => res.json())
+          .then(this.setResults)
+          .then(this.callEchoServer);
       }
     },
     setResults (results) {
@@ -63,7 +64,18 @@ export default {
       let year = d.getFullYear();
 
       return `${day} ${date} ${month} ${year}`;
-    }
+    },
+    callEchoServer() {
+      const echoUrl = process.env.VUE_APP_ECHO_SERVICE_URL || 'http://echo-service';
+      fetch(echoUrl)
+        .then(response => response.json())
+        .then(data => {
+          console.log('Response from Echo Server:', data);
+        })
+        .catch(error => {
+          console.error('Error communicating with Echo Server:', error);
+        });
+    },
   }
 }
 

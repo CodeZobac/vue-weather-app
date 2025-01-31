@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vue-weather
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vue-weather
+  template:
+    metadata:
+      labels:
+        app: vue-weather
+    spec:
+      containers:
+      - name: vue-weather
+        image: vue-weather:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+          - name: ECHO_SERVICE_URL
+            value: "http://echo-service"

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vue-weather-service
+spec:
+  selector:
+    app: vue-weather
+  ports:
+    - port: 80
+      targetPort: 8080
